@@ -1,0 +1,6 @@
+build/
+*.pro.user
+*.pro.user.*
+*.autosave
+*.user
+.qtcreator/
