@@ -8,7 +8,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(mundial main.cpp
     jugador.h jugador.cpp
     seleccion.h seleccion.cpp
-    grupo.h grupo.cpp)
+    grupo.h grupo.cpp
+    partido.h partido.cpp)
 
 include(GNUInstallDirs)
 install(TARGETS mundial
