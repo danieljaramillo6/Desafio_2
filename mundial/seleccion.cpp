@@ -18,6 +18,7 @@ Seleccion::Seleccion() {
     pgGrupo=0;
     peGrupo=0;
     ppGrupo=0;
+    jugadores=nullptr;
 
 }
 
@@ -152,6 +153,56 @@ Seleccion::~Seleccion() {
     delete[] jugadores;
 }
 
+Seleccion& Seleccion::operator=(const Seleccion& otra) {
+    if (this != &otra) {
+
+        delete[] nombre;
+        delete[] dt;
+        delete[] confederacion;
+        delete[] federacion;
+        delete[] jugadores;
+
+        if (otra.nombre) {
+            nombre = new char[strlen(otra.nombre) + 1];
+            strcpy(nombre, otra.nombre);
+        } else nombre = nullptr;
+
+        if (otra.dt) {
+            dt = new char[strlen(otra.dt) + 1];
+            strcpy(dt, otra.dt);
+        } else dt = nullptr;
+
+        if (otra.confederacion) {
+            confederacion = new char[strlen(otra.confederacion) + 1];
+            strcpy(confederacion, otra.confederacion);
+        } else confederacion = nullptr;
+
+        if (otra.federacion) {
+            federacion = new char[strlen(otra.federacion) + 1];
+            strcpy(federacion, otra.federacion);
+        } else federacion = nullptr;
+
+        rankingFIFA = otra.rankingFIFA;
+        golesFavor = otra.golesFavor;
+        golesContra = otra.golesContra;
+        partidosGanados = otra.partidosGanados;
+        partidosEmpatados = otra.partidosEmpatados;
+        partidosPerdidos = otra.partidosPerdidos;
+
+        gfGrupo = otra.gfGrupo;
+        gcGrupo = otra.gcGrupo;
+        pgGrupo = otra.pgGrupo;
+        peGrupo = otra.peGrupo;
+        ppGrupo = otra.ppGrupo;
+
+        jugadores = new Jugador[26];
+        for (int i = 0; i < 26; i++) {
+            jugadores[i] = otra.jugadores[i];
+        }
+    }
+    return *this;
+}
+
 Seleccion& Seleccion::operator++() {
     golesFavor++;
     gfGrupo++;
@@ -260,4 +311,8 @@ int Seleccion::getPPGrupo()const{
 }
 char* Seleccion::getnombre()const{
     return nombre;
+}
+
+char* Seleccion::getConfederacion() const{
+    return confederacion;
 }

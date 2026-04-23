@@ -9,7 +9,9 @@ add_executable(mundial main.cpp
     jugador.h jugador.cpp
     seleccion.h seleccion.cpp
     grupo.h grupo.cpp
-    partido.h partido.cpp)
+    partido.h partido.cpp
+    manager.cpp
+    manager.h)
 
 include(GNUInstallDirs)
 install(TARGETS mundial

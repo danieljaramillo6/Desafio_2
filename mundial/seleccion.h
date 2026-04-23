@@ -45,6 +45,9 @@ public:
     Seleccion& operator--();
     Seleccion& operator--(int);
 
+    Seleccion& operator=(const Seleccion& otra);
+
+
 
     int getDifGoles() const;
     int getRanking() const;
@@ -59,6 +62,7 @@ public:
     int getPEGrupo() const;
     int getPPGrupo() const;
     char* getnombre() const;
+    char* getConfederacion() const;
 };
 
 #endif

@@ -1,7 +1,0 @@
-# ninja log v6
-6	345	7985398214906710	CMakeFiles/mundial.dir/jugador.cpp.obj	c7b476dc8c725583
-9	348	7985398214946738	CMakeFiles/mundial.dir/seleccion.cpp.obj	3e7a391024feeee4
-2	432	7985398214866739	CMakeFiles/mundial.dir/main.cpp.obj	723b1582c74141e0
-13	483	7985398214981947	CMakeFiles/mundial.dir/grupo.cpp.obj	c254d4ea108875e9
-17	558	7985398215021923	CMakeFiles/mundial.dir/partido.cpp.obj	5dd462c813866872
-559	681	7985398220435804	mundial.exe	51a800fd661f65cc

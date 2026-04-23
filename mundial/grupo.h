@@ -6,8 +6,8 @@
 class Grupo {
 private:
     char letra;
-    short n_selecciones;
-    Seleccion* selecciones; // arreglo dinámico (4 selecciones)
+    Seleccion** selecciones;  // arreglo dinámico de punteros
+    int n_selecciones;
 
 public:
     // Constructores
@@ -22,13 +22,14 @@ public:
     Grupo& operator=(const Grupo& otro);
 
     // Métodos
-    void agregarSeleccion(const Seleccion& sel);
+    void agregarSeleccion(Seleccion* sel);
     void imprimirGrupo() const;
     void ordenarGrupo();
 
     // Getters
     char getLetra() const;
-    Seleccion& getSeleccion(int indice);
+    Seleccion* getSeleccion(int indice);
+    int getCantidad();
 };
 
 #endif
