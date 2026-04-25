@@ -30,6 +30,7 @@ public:
     Partido();
     Partido(Seleccion* l,Seleccion* v, const char* date, const char* sede);
     Partido(const Partido& otro);
+    Partido& operator=(const Partido& otro);
     ~Partido();
 
     void simulator(bool eliminatoria = false);

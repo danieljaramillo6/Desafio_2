@@ -159,6 +159,48 @@ Partido::Partido(const Partido& otro)
     }
 }
 
+Partido& Partido::operator=(const Partido& otro) {
+    if (this == &otro) return *this;
+
+    delete[] date;
+    delete[] sede;
+    delete[] hour;
+    for (int i = 0; i < 3; i++) delete[] referees[i];
+
+    local    = otro.local;
+    visiting = otro.visiting;
+    gol_local    = otro.gol_local;
+    gol_visiting = otro.gol_visiting;
+    xg_l = otro.xg_l;
+    xg_v = otro.xg_v;
+    posetion_l = otro.posetion_l;
+    posetion_v = otro.posetion_v;
+    pos_prorroga = otro.pos_prorroga;
+    min_game     = otro.min_game;
+
+    for (int i = 0; i < 11; i++) {
+        once_l[i] = otro.once_l[i];
+        once_v[i] = otro.once_v[i];
+    }
+
+    date = otro.date ? (new char[strlen(otro.date)+1]) : nullptr;
+    if (date) strcpy(date, otro.date);
+
+    sede = otro.sede ? (new char[strlen(otro.sede)+1]) : nullptr;
+    if (sede) strcpy(sede, otro.sede);
+
+    hour = otro.hour ? (new char[strlen(otro.hour)+1]) : nullptr;
+    if (hour) strcpy(hour, otro.hour);
+
+    for (int i = 0; i < 3; i++) {
+        referees[i] = otro.referees[i] ?
+                          (new char[strlen(otro.referees[i])+1]) : nullptr;
+        if (referees[i]) strcpy(referees[i], otro.referees[i]);
+    }
+
+    return *this;
+}
+
 //destructor se encarga de liberar memoria que se reservo
 Partido::~Partido()
 {
@@ -218,34 +260,46 @@ float Partido::calcularXG(Seleccion* team_a, Seleccion* team_b)
     return mu * pow(GF / mu, alpha) * pow(GC / mu, beta);
 }
 
+// elige aleatoriamente 11 jugadores del equipo
 void Partido::once_convocado(Seleccion* team, int once[11])
 {
+    // arreglo con indices de 0 - 25 que representa 26 jugadores
     int indices[26];
     for (int i = 0; i < 26; i++)
     {
         indices[i] = i;
     }
 
+    // mezcla parcial: solo necesita los primeros 11
+    // intercambia cada posicion con una aleatoria posterior
     for (int i = 0; i < 11; i++)
     {
         int j = i + rand() % (26 - i);
         int tmp = indices[i];
         indices[i] = indices[j];
         indices[j] = tmp;
+
+        // se guarda los indicies en el once
         once[i] = indices[i];
     }
 }
 
+// simula los eventos de los jugadores como los goles, tarjetas,
 void Partido::events_players(Seleccion* team, int once[11], int goals)
 {
     int goals_given = 0;
 
     for (int i = 0; i < 11; i++)
     {
+        // accede al jugador de la seleccion con su indice
         Jugador& j = team->getJugador(once[i]);
 
+        // todos los convocados juegan los mismos minutos
+        // 90 en partido normal, 120 si hubo prorroga
         j.agregarMinutos(min_game);
 
+        // cada jugador tiene 4% de probabilidad de meter gol
+        // se reparten hasta llegar al total de goles de el equipo
         if (goals_given < goals)
         {
             if ((rand() % 100) < 4)
@@ -255,24 +309,29 @@ void Partido::events_players(Seleccion* team, int once[11], int goals)
             }
         }
 
+        // tarjetas amarillas
         if ((rand() % 10000) < 600)
         {
             j.recibirAmarilla();
             if ((rand() % 10000) < 115)
             {
                 j.recibirAmarilla();
+                // dos amarillas una roja
                 j.recibirRoja();
             }
         }
 
+        // primera falta: 13% de probabilidad
         if ((rand() % 10000) < 1300)
         {
+            // segunda falta: 2.75% de probabilidad
             j.cometerFalta();
             if ((rand() % 10000) < 275)
             {
                 j.cometerFalta();
                 if ((rand() % 10000) < 70)
                 {
+                    // tercera falta: 0.7% de probabilidad
                     j.cometerFalta();
                 }
             }
@@ -344,9 +403,11 @@ void Partido::simulator(bool eliminatoria)
     //simula posibles eventos para los jugadoes
 }
 
-
+// actualiza las estadisticas historicas de ambos equipos
+// luego de que el partido fue simulado
 void Partido::update_statistics()
 {
+    // suma los goles a favor de cada equipo
     for (int i = 0; i < gol_local; i++)
     {
         local->operator++();
@@ -355,6 +416,9 @@ void Partido::update_statistics()
     {
         visiting->operator++();
     }
+
+    // suma los goles en contra de cada equipo
+    // los goles del visitante son los que recibe el local y viceversa
     for (int i = 0; i < gol_visiting; i++)
     {
         local->operator--();
@@ -364,6 +428,7 @@ void Partido::update_statistics()
         visiting->operator--();
     }
 
+    // registra el resultado para sumar puntos y partidos
     if (gol_local > gol_visiting)
     {
         local->registrarVictoria();
