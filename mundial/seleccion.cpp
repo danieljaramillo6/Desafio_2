@@ -316,3 +316,21 @@ char* Seleccion::getnombre()const{
 char* Seleccion::getConfederacion() const{
     return confederacion;
 }
+int Seleccion::getPartidosGanados() const  { return partidosGanados; }
+int Seleccion::getPartidosEmpatados() const { return partidosEmpatados; }
+int Seleccion::getPartidosPerdidos() const  { return partidosPerdidos; }
+
+const char* Seleccion::getDt()         const { return dt; }
+const char* Seleccion::getFederacion() const { return federacion; }
+
+size_t Seleccion::calcularMemoria() const {
+    size_t mem = sizeof(Seleccion);
+    if (nombre)        mem += strlen(nombre)        + 1;
+    if (dt)            mem += strlen(dt)            + 1;
+    if (confederacion) mem += strlen(confederacion) + 1;
+    if (federacion)    mem += strlen(federacion)    + 1;
+    if (jugadores)
+        for (int i = 0; i < 26; i++)
+            mem += jugadores[i].calcularMemoria();
+    return mem;
+}

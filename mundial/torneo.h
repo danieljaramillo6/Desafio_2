@@ -4,8 +4,7 @@
 #include "partido.h"
 #include "manager.h"
 
-class Torneo
-{
+class Torneo {
 private:
     Seleccion* selections;
     int n_selections;
@@ -22,6 +21,22 @@ private:
     Partido* semi_final;
     Partido final;
     Partido third_place;
+
+    Seleccion* r16_teams[16];
+    Seleccion* r8_teams[8];
+    Seleccion* r4_teams[4];
+
+    int ultimo_dia[48];
+
+    // métricas
+    mutable long long iter;
+
+    // helpers
+    int    buscarIndice(Seleccion* s) const;
+    void   asignarFechasJornada(Partido* partidos, int n,
+                              int dia_inicio, int dia_fin);
+    size_t calcularMemoriaTotal() const;
+    void   reportar(const char* func) const;
 
 public:
     Torneo();
@@ -40,7 +55,7 @@ public:
     void simular_semi();
     void simular_Final();
     void imprimirEstadisticas() const;
+    void guardarCSV(const char* archivo) const;
 };
 
-
-#endif // TORNEO_H
+#endif

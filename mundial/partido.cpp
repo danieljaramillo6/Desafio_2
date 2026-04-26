@@ -218,46 +218,46 @@ Partido::~Partido()
 
 // calcula los goles esperados del local contra el visitante
 // GF y GC son los promedios historicos de goles a favor y en contra
-float Partido::calcularXG(Seleccion* team_a, Seleccion* team_b)
-{
+float Partido::calcularXG(Seleccion* team_a, Seleccion* team_b) {
 
-    // total de partidos jugados por cada equipo en el torneo
+    // partidos jugados en el grupo
     int pj_a = team_a->getPGGrupo() + team_a->getPEGrupo() + team_a->getPPGrupo();
     int pj_b = team_b->getPGGrupo() + team_b->getPEGrupo() + team_b->getPPGrupo();
 
-    float GF = 0;
-    float GC = 0;
+    // partidos históricos totales
+    int hist_a = team_a->getPartidosGanados() + team_a->getPartidosEmpatados() + team_a->getPartidosPerdidos();
+    int hist_b = team_b->getPartidosGanados() + team_b->getPartidosEmpatados() + team_b->getPartidosPerdidos();
 
-    // si ya jugo partidos usa el promedio, si no usa el total historico
-    // esto evita dividir por cero al inicio del torneo
+    float GF, GC;
+
+    // si ya jugó en el grupo usa ese promedio, si no usa el histórico
     if (pj_a > 0)
-    {
-        GF = (float)team_a->getGolesFavor() / pj_a;
-    }
+        GF = (float)team_a->getGFGrupo() / pj_a;       // promedio en el torneo
+    else if (hist_a > 0)
+        GF = (float)team_a->getGolesFavor() / hist_a;  // promedio histórico
     else
-    {
-        GF = (float)team_a->getGolesFavor();
-    }
+        GF = 1.0f;
 
-    if (pj_b > 0) {
-        GC = (float)team_b->getGolesContra() / pj_b;
-    }
+    if (pj_b > 0)
+        GC = (float)team_b->getGCGrupo() / pj_b;
+    else if (hist_b > 0)
+        GC = (float)team_b->getGolesContra() / hist_b;
     else
-    {
-        GC = (float)team_b->getGolesContra();
-    }
+        GC = 1.0f;
 
-    // evita que GF o GC sean cero para no romper el programa
     if (GF <= 0) GF = 0.1f;
     if (GC <= 0) GC = 0.1f;
 
-
-    float mu = 1.35f;
+    float mu    = 1.35f;
     float alpha = 0.6f;
-    float beta = 0.4f;
+    float beta  = 0.4f;
 
-    // ecuacion de xg
-    return mu * pow(GF / mu, alpha) * pow(GC / mu, beta);
+    float xg = mu * pow(GF / mu, alpha) * pow(GC / mu, beta);
+
+    // techo: ningún equipo debería esperar más de 4 goles por partido
+    if (xg > 4.0f) xg = 4.0f;
+
+    return xg;
 }
 
 // elige aleatoriamente 11 jugadores del equipo
@@ -497,4 +497,20 @@ int Partido::getGol_visiting() const {
 
 bool Partido::fue_prorroga() const {
     return pos_prorroga;
+}
+Seleccion* Partido::getVisiting()const{
+    return visiting;
+}
+Seleccion* Partido::getLocal()const{
+    return local;
+}
+
+size_t Partido::calcularMemoria() const {
+    size_t mem = sizeof(Partido);
+    if (date) mem += strlen(date) + 1;
+    if (sede) mem += strlen(sede) + 1;
+    if (hour) mem += strlen(hour) + 1;
+    for (int i = 0; i < 3; i++)
+        if (referees[i]) mem += strlen(referees[i]) + 1;
+    return mem;
 }

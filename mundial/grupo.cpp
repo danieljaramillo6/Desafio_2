@@ -64,60 +64,51 @@ void Grupo::agregarSeleccion(Seleccion* sel) {
     }
 }
 
-void Grupo::imprimirGrupo() const {
+void Grupo::imprimirGrupo(long long& iter) const {
     cout << "Grupo " << letra << endl;
-    cout << "Equipo\tPJ\tPG\tPE\tPP\tGF\tGC\tDG\tPts" << endl;
-
+    cout << "Equipo\t\t\tPJ\tPG\tPE\tPP\tGF\tGC\tDG\tPts" << endl;
     for (int i = 0; i < n_selecciones; i++) {
+        iter++;
         Seleccion* s = selecciones[i];
-
-        cout << s->getnombre() << "\t"
+        cout << s->getnombre()       << "\t\t\t"
              << (s->getPEGrupo() + s->getPGGrupo() + s->getPPGrupo()) << "\t"
-             << s->getPGGrupo() << "\t"
-             << s->getPEGrupo() << "\t"
-             << s->getPPGrupo() << "\t"
-             << s->getGFGrupo() << "\t"
-             << s->getGCGrupo() << "\t"
-             << s->getDGGrupo() << "\t"
-             << s->getPuntosGrupo() << endl;
+             << s->getPGGrupo()      << "\t"
+             << s->getPEGrupo()      << "\t"
+             << s->getPPGrupo()      << "\t"
+             << s->getGFGrupo()      << "\t"
+             << s->getGCGrupo()      << "\t"
+             << s->getDGGrupo()      << "\t"
+             << s->getPuntosGrupo()  << endl;
     }
 }
 
-void Grupo::ordenarGrupo() {
-
+void Grupo::ordenarGrupo(long long& iter) {
     for (int i = 0; i < n_selecciones - 1; i++) {
         for (int j = 0; j < n_selecciones - 1 - i; j++) {
-
+            iter++;
             Seleccion* a = selecciones[j];
             Seleccion* b = selecciones[j + 1];
-
             bool cambiar = false;
-
-            if (a->getPuntosGrupo() < b->getPuntosGrupo()) {
-                cambiar = true;
-            }
+            if (a->getPuntosGrupo() < b->getPuntosGrupo()) cambiar = true;
             else if (a->getPuntosGrupo() == b->getPuntosGrupo()) {
-
-                if (a->getDGGrupo() < b->getDGGrupo()) {
-                    cambiar = true;
-                }
-                else if (a->getDGGrupo() == b->getDGGrupo()) {
-
-                    if (a->getGFGrupo() < b->getGFGrupo()) {
-                        cambiar = true;
-                    }
-                }
+                if (a->getDGGrupo() < b->getDGGrupo()) cambiar = true;
+                else if (a->getDGGrupo() == b->getDGGrupo())
+                    if (a->getGFGrupo() < b->getGFGrupo()) cambiar = true;
             }
-
             if (cambiar) {
                 Seleccion* temp = selecciones[j];
-                selecciones[j] = selecciones[j + 1];
+                selecciones[j]   = selecciones[j + 1];
                 selecciones[j + 1] = temp;
             }
         }
     }
 }
 
+size_t Grupo::calcularMemoria() const {
+    size_t mem = sizeof(Grupo);
+    mem += 4 * sizeof(Seleccion*); // arreglo de punteros (no posee las selecciones)
+    return mem;
+}
 // Getters
 char Grupo::getLetra() const {
     return letra;

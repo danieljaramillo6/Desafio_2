@@ -1,6 +1,6 @@
 #ifndef SELECCION_H
 #define SELECCION_H
-
+#include <cstddef>
 #include "Jugador.h"
 
 class Seleccion {
@@ -63,6 +63,12 @@ public:
     int getPPGrupo() const;
     char* getnombre() const;
     char* getConfederacion() const;
+    int getPartidosGanados() const;
+    int getPartidosEmpatados() const;
+    int getPartidosPerdidos() const;
+    size_t calcularMemoria() const;
+    const char* getDt()         const;
+    const char* getFederacion() const;
 };
 
 #endif

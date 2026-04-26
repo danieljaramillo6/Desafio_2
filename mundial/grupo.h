@@ -1,6 +1,6 @@
 #ifndef GRUPO_H
 #define GRUPO_H
-
+#include <cstddef>
 #include "Seleccion.h"
 
 class Grupo {
@@ -23,8 +23,9 @@ public:
 
     // Métodos
     void agregarSeleccion(Seleccion* sel);
-    void imprimirGrupo() const;
-    void ordenarGrupo();
+    void imprimirGrupo(long long& iter) const;
+    void ordenarGrupo(long long& iter);
+    size_t calcularMemoria() const;
 
     // Getters
     char getLetra() const;

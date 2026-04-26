@@ -151,3 +151,9 @@ const char* Jugador::getApellido()const{
     return apellido;
 }
 
+size_t Jugador::calcularMemoria() const {
+    size_t mem = sizeof(Jugador);
+    if (nombre)   mem += strlen(nombre)   + 1;
+    if (apellido) mem += strlen(apellido) + 1;
+    return mem;
+}

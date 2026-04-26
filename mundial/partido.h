@@ -40,8 +40,9 @@ public:
     int getGol_local() const;
     int getGol_visiting() const;
     bool fue_prorroga() const;
-
-
+    Seleccion* getLocal()const;
+    Seleccion* getVisiting()const;
+    size_t calcularMemoria() const;
 
 };
 

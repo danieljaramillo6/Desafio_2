@@ -1,5 +1,6 @@
 #ifndef JUGADOR_H
 #define JUGADOR_H
+#include <cstddef>
 
 class Jugador {
 private:
@@ -40,6 +41,7 @@ public:
     int getDorsal() const;
     const char* getNombre() const;
     const char* getApellido() const;
+    size_t calcularMemoria() const;
 
     Jugador& operator=(const Jugador& otra);
 };
